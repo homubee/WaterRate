@@ -12,11 +12,12 @@ class PublicRateAdapter(val datas: MutableList<PublicRate>) : RecyclerView.Adapt
 
     fun add(data: PublicRate) {
         datas.add(data)
-        notifyDataSetChanged()
+        notifyItemInserted(itemCount)
     }
     private fun delete(position: Int) {
         datas.removeAt(position)
-        notifyDataSetChanged()
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
     }
 
     override fun getItemCount(): Int {
