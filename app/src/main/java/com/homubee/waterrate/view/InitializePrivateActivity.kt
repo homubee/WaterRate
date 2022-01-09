@@ -1,35 +1,48 @@
 package com.homubee.waterrate.view
 
 import android.content.DialogInterface
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.os.Parcelable
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.homubee.waterrate.databinding.ActivityInitializePublicBinding
+import com.homubee.waterrate.databinding.ActivityInitializePrivateBinding
 import com.homubee.waterrate.databinding.DialogPublicInputBinding
+import com.homubee.waterrate.model.PrivateRate
 import com.homubee.waterrate.model.PublicRate
+import com.homubee.waterrate.view.PrivateRateAdapter
 
-class InitializePublicActivity : AppCompatActivity() {
-    lateinit var adapter: PublicRateAdapter
+class InitializePrivateActivity : AppCompatActivity() {
+    lateinit var publicDataList: MutableList<PublicRate>
+    lateinit var adapter: PrivateRateAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityInitializePublicBinding.inflate(layoutInflater)
+        val binding = ActivityInitializePrivateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = PublicRateAdapter(mutableListOf<PublicRate>())
-        binding.recyclerPublic.layoutManager = LinearLayoutManager(this)
-        binding.recyclerPublic.adapter = adapter
+        val intent = intent
+        publicDataList = intent.getParcelableArrayListExtra<Parcelable>("public") as MutableList<PublicRate>
+        adapter = PrivateRateAdapter(mutableListOf<PrivateRate>())
+        binding.recyclerPrivate.layoutManager = LinearLayoutManager(this)
+        binding.recyclerPrivate.adapter = adapter
 
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogPublicInputBinding.inflate(layoutInflater)
             AlertDialog.Builder(this).run {
-                setTitle("공용 수도 설비 입력")
+                setTitle("개인 수도 설비 입력")
                 setIcon(android.R.drawable.ic_menu_edit)
+
+                // 체크 박스 동적으로 추가
+                val checkBoxList = mutableListOf<CheckBox>()
+                for (i in publicDataList.indices) {
+                    checkBoxList.add(CheckBox(applicationContext));
+                    checkBoxList[i].text = publicDataList[i].name
+                    dialogBinding.root.addView(checkBoxList[i])
+                }
                 setView(dialogBinding.root)
+
                 setPositiveButton("확인", DialogInterface.OnClickListener { p0, p1 ->
                     val name = dialogBinding.etName.text.toString()
                     val count = dialogBinding.etCount.text.toString()
@@ -37,29 +50,12 @@ class InitializePublicActivity : AppCompatActivity() {
                     if (count.contains(' ') || count.contains('-')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
-                        adapter.add(PublicRate(name, count.toInt()))
+                        adapter.add(PrivateRate(name, count.toInt(), mutableListOf<PublicRate>()))
                     }
                 })
                 setNegativeButton("취소", null)
                 show()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuNext: MenuItem? = menu?.add(0, 0, 0, "다음")
-        menuNext?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_WITH_TEXT)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        0 -> {
-            val intent = Intent(applicationContext, InitializePrivateActivity::class.java)
-            intent.putExtra("public",  ArrayList(adapter.datas))
-            startActivity(intent)
-            finish()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
     }
 }
