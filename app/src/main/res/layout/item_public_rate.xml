@@ -80,6 +80,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:backgroundTint="#FF0000"/>
     <View
+        android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#FF948B8B"
