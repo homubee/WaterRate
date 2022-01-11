@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.InitializePublicActivity">
+    tools:context=".view.InitializePrivateActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_public"
+        android:id="@+id/recycler_private"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         app:icon="@android:drawable/ic_input_add"
-        android:text="새 공용 수도 추가"
+        android:text="새 개인 수도 추가"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
