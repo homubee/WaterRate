@@ -4,10 +4,12 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.homubee.waterrate.databinding.ActivityInitializePrivateBinding
 import com.homubee.waterrate.databinding.DialogPublicInputBinding
@@ -28,6 +30,11 @@ class InitializePrivateActivity : AppCompatActivity() {
         adapter = PrivateRateAdapter(mutableListOf<PrivateRate>())
         binding.recyclerPrivate.layoutManager = LinearLayoutManager(this)
         binding.recyclerPrivate.adapter = adapter
+        adapter.buttonClickListener = object: PrivateRateAdapter.ButtonCallbackListener{
+            override fun callBack() {
+                if (adapter.datas.isEmpty()) binding.tvAddNotice.visibility = View.VISIBLE
+            }
+        }
 
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogPublicInputBinding.inflate(layoutInflater)
@@ -65,6 +72,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         adapter.add(PrivateRate(name, count.toInt(), publicList))
+                        if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
                     }
                 })
                 setNegativeButton("취소", null)

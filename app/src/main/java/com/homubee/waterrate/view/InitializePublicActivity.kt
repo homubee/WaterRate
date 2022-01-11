@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.homubee.waterrate.databinding.ActivityInitializePublicBinding
 import com.homubee.waterrate.databinding.DialogPublicInputBinding
@@ -23,6 +25,11 @@ class InitializePublicActivity : AppCompatActivity() {
         adapter = PublicRateAdapter(mutableListOf<PublicRate>())
         binding.recyclerPublic.layoutManager = LinearLayoutManager(this)
         binding.recyclerPublic.adapter = adapter
+        adapter.buttonClickListener = object: PublicRateAdapter.ButtonCallbackListener{
+            override fun callBack() {
+                if (adapter.datas.isEmpty()) binding.tvAddNotice.visibility = View.VISIBLE
+            }
+        }
 
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogPublicInputBinding.inflate(layoutInflater)
@@ -39,6 +46,7 @@ class InitializePublicActivity : AppCompatActivity() {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         adapter.add(PublicRate(name, count.toInt(), privateList))
+                        if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
                     }
                 })
                 setNegativeButton("취소", null)

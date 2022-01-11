@@ -13,6 +13,7 @@ import com.homubee.waterrate.model.PrivateRate
 class PrivateRateViewHolder(val binding: ItemPublicRateBinding) : RecyclerView.ViewHolder(binding.root)
 
 class PrivateRateAdapter(val datas: MutableList<PrivateRate>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    lateinit var buttonClickListener: ButtonCallbackListener
 
     fun add(data: PrivateRate) {
         datas.add(data)
@@ -24,12 +25,15 @@ class PrivateRateAdapter(val datas: MutableList<PrivateRate>) : RecyclerView.Ada
         notifyItemRangeChanged(position, itemCount)
     }
 
+    interface ButtonCallbackListener {
+        fun callBack()
+    }
+
     override fun getItemCount(): Int {
         return datas.size
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             RecyclerView.ViewHolder = PrivateRateViewHolder(ItemPublicRateBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val DYNAMICTEXTVIEW_ID = 2000
         val binding = (holder as PrivateRateViewHolder).binding
@@ -67,6 +71,7 @@ class PrivateRateAdapter(val datas: MutableList<PrivateRate>) : RecyclerView.Ada
         // 삭제 버튼 이벤트
         binding.btnDelete.setOnClickListener {
             delete(position)
+            buttonClickListener.callBack()
         }
     }
 }
