@@ -42,7 +42,9 @@ class InitializePublicActivity : AppCompatActivity() {
                     val count = dialogBinding.etCount.text.toString()
                     val privateList = mutableListOf<String>()
 
-                    if (count.contains(' ') || count.contains('-')) {
+                    if (name.isBlank() || count.isBlank()) {
+                        Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                    } else if (count.contains(' ') || count.contains('-')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         adapter.add(PublicRate(name, count.toInt(), privateList))
