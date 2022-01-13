@@ -1,6 +1,7 @@
 package com.homubee.waterrate.view
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -35,38 +36,24 @@ class PrivateRateAdapter(val datas: MutableList<PrivateRate>) : RecyclerView.Ada
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             RecyclerView.ViewHolder = PrivateRateViewHolder(ItemPublicRateBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val DYNAMICTEXTVIEW_ID = 2000
         val binding = (holder as PrivateRateViewHolder).binding
+        binding.tvName.text = "상호명 :"
         binding.tvNameInput.text = datas[position].name
         binding.tvCountInput.text = datas[position].lastMonthCount.toString()
+        binding.tvPublic.visibility = View.VISIBLE
 
-        // 동적으로 추가되는 공용 수도 관련 출력 부분
+        // 공용 수도 관련 출력 부분
         if (!datas[position].publicList.isEmpty()) {
-            val publicListTextView = TextView(holder.itemView.context)
-            val clparams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).run {
-                topToBottom = binding.btnDelete.id
-                leftToLeft = binding.root.id
-                rightToRight = binding.root.id
-                bottomToTop = binding.viewLine.id
-                leftMargin = Math.round(10* binding.root.resources.displayMetrics.density)
-                bottomMargin = Math.round(10* binding.root.resources.displayMetrics.density)
-                this
+            binding.tvPublic.apply {
+                text = "공용 수도 : "
+                for (i in datas[position].publicList.indices) {
+                    text = text.toString() + if (i != 0) {", "} else {""} + datas[position].publicList[i]
+                }
             }
-
-            publicListTextView.layoutParams = clparams
-            publicListTextView.id = DYNAMICTEXTVIEW_ID
-            publicListTextView.text = "공용 수도 : "
-
-            for (i in datas[position].publicList.indices) {
-                publicListTextView.text = publicListTextView.text.toString() + if (i != 0) {", "} else {""} + datas[position].publicList[i]
-            }
-            (binding.btnDelete.layoutParams as ConstraintLayout.LayoutParams).bottomToTop = DYNAMICTEXTVIEW_ID
-            (binding.tvCount.layoutParams as ConstraintLayout.LayoutParams).bottomToTop = DYNAMICTEXTVIEW_ID
-            (binding.tvCountInput.layoutParams as ConstraintLayout.LayoutParams).bottomToTop = DYNAMICTEXTVIEW_ID
-            (binding.tvName.layoutParams as ConstraintLayout.LayoutParams).bottomToTop = DYNAMICTEXTVIEW_ID
-            (binding.tvNameInput.layoutParams as ConstraintLayout.LayoutParams).bottomToTop = DYNAMICTEXTVIEW_ID
-            binding.root.addView(publicListTextView)
+        } else {
+            binding.tvPublic.text = "공용 수도 : 없음"
         }
+
 
         // 삭제 버튼 이벤트
         binding.btnDelete.setOnClickListener {

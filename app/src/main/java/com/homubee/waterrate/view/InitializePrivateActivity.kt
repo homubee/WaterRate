@@ -17,7 +17,7 @@ import com.homubee.waterrate.model.PrivateRate
 import com.homubee.waterrate.model.PublicRate
 
 class InitializePrivateActivity : AppCompatActivity() {
-    val BUTTON_ID = 100
+    val CHECKBOX_ID = 100
     lateinit var publicDataList: MutableList<PublicRate>
     lateinit var adapter: PrivateRateAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,7 @@ class InitializePrivateActivity : AppCompatActivity() {
 
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogPublicInputBinding.inflate(layoutInflater)
+            dialogBinding.tvName.text = "상호명"
             AlertDialog.Builder(this).run {
                 setTitle("개인 수도 설비 입력")
                 setIcon(android.R.drawable.ic_menu_edit)
@@ -49,7 +50,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                     val llparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     llparams.leftMargin = Math.round(10*resources.displayMetrics.density)
                     checkBoxList[i].layoutParams = llparams
-                    checkBoxList[i].id = BUTTON_ID+i
+                    checkBoxList[i].id = CHECKBOX_ID+i
                     checkBoxList[i].text = publicDataList[i].name
                     dialogBinding.root.addView(checkBoxList[i])
                 }
@@ -61,14 +62,16 @@ class InitializePrivateActivity : AppCompatActivity() {
                     val publicList = mutableListOf<String>()
 
                     for (i in publicDataList.indices) {
-                        val publicCheckBox = dialogBinding.root.findViewById<CheckBox>(BUTTON_ID+i)
+                        val publicCheckBox = dialogBinding.root.findViewById<CheckBox>(CHECKBOX_ID+i)
                         if (publicCheckBox.isChecked) {
                             publicDataList[i].privateList.add(name)
                             publicList.add(publicCheckBox.text.toString())
                         }
                     }
 
-                    if (count.contains(' ') || count.contains('-')) {
+                    if (name.isBlank() || count.isBlank()) {
+                        Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                    } else if (count.contains(' ') || count.contains('-')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         adapter.add(PrivateRate(name, count.toInt(), publicList))
