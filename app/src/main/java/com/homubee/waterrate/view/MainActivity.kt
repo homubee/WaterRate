@@ -16,8 +16,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCalculate.isEnabled = false
 
+        // 초기화 버튼 클릭 시 경고 다이얼로그 출력
         binding.btnReset.setOnClickListener {
-            AlertDialog.Builder(this). run {
+            AlertDialog.Builder(this).apply {
                 setTitle("주의")
                 setIcon(android.R.drawable.ic_dialog_alert)
                 setMessage("정말 초기화하시겠습니까?")
@@ -30,8 +31,8 @@ class MainActivity : AppCompatActivity() {
                 setNegativeButton("no", null)
                 show()
             }
-
         }
+
         binding.btnCalculate.setOnClickListener {
             Toast.makeText(this, "calculate", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, CalculateActivity::class.java)
