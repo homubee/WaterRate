@@ -38,6 +38,7 @@ class InitializePrivateActivity : AppCompatActivity() {
 
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogPublicInputBinding.inflate(layoutInflater)
+            dialogBinding.tvName.text = "상호명"
             AlertDialog.Builder(this).run {
                 setTitle("개인 수도 설비 입력")
                 setIcon(android.R.drawable.ic_menu_edit)
