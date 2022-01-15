@@ -1,9 +1,12 @@
 package com.homubee.waterrate.view
 
 import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -97,5 +100,20 @@ class InitializePrivateActivity : AppCompatActivity() {
                 show()
             }
         }
+    }
+
+    // 메뉴 버튼 추가 및 액티비티 전환
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuNext: MenuItem? = menu?.add(0, 0, 0, "완료")
+        menuNext?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_WITH_TEXT)
+        return super.onCreateOptionsMenu(menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        0 -> {
+            Toast.makeText(applicationContext, "데이터가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+            finish()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }
