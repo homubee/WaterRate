@@ -1,7 +1,8 @@
 package com.homubee.waterrate.view
 
+import android.content.ContentValues
 import android.content.DialogInterface
-import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.homubee.waterrate.databinding.ActivityInitializePrivateBinding
 import com.homubee.waterrate.databinding.DialogWaterInputBinding
 import com.homubee.waterrate.model.WaterRate
+import com.homubee.waterrate.util.DBHelper
 
 class InitializePrivateActivity : AppCompatActivity() {
     companion object {
@@ -108,8 +110,36 @@ class InitializePrivateActivity : AppCompatActivity() {
         menuNext?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_WITH_TEXT)
         return super.onCreateOptionsMenu(menu)
     }
+    // DB에 데이터 저장 및 액티비티 종료
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
+            val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
+            for (i in publicDataList.indices) {
+                val values = ContentValues()
+                var list = ""
+                values.put("type", publicDataList[i].type)
+                values.put("name", publicDataList[i].name)
+                values.put("count", publicDataList[i].lastMonthCount)
+                for (j in publicDataList[i].waterRateList.indices) {
+                    list += publicDataList[i].waterRateList[j] + if (j == publicDataList[i].waterRateList.size-1) {""} else {","}
+                }
+                values.put("list", list)
+                db.insert("water_rate", null, values)
+            }
+            val privateDataList = adapter.dataList
+            for (i in privateDataList.indices) {
+                val values = ContentValues()
+                var list = ""
+                values.put("type", privateDataList[i].type)
+                values.put("name", privateDataList[i].name)
+                values.put("count", privateDataList[i].lastMonthCount)
+                for (j in privateDataList[i].waterRateList.indices) {
+                    list += privateDataList[i].waterRateList[j] + if (j == privateDataList[i].waterRateList.size-1) {""} else {","}
+                }
+                values.put("list", list)
+                db.insert("water_rate", null, values)
+            }
+
             Toast.makeText(applicationContext, "데이터가 저장되었습니다.", Toast.LENGTH_SHORT).show()
             finish()
             true
