@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WaterRate">
-        <activity android:name=".view.InitializePrivateActivity"></activity>
+        <activity android:name=".view.ResultActivity"></activity>
+        <activity android:name=".view.InitializePrivateActivity" />
         <activity android:name=".view.CalculateActivity" />
         <activity android:name=".view.InitializePublicActivity" />
         <activity android:name=".view.MainActivity">

@@ -84,9 +84,26 @@
             android:layout_height="wrap_content"
             android:text="총 사용량 : " />
         <EditText
-            android:id="@+id/et_usage"
+            android:id="@+id/et_total_usage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="전체 요금 : " />
+        <EditText
+            android:id="@+id/et_total_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
     </LinearLayout>
 
 </LinearLayout>
