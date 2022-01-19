@@ -39,7 +39,7 @@ class CalculateActivity : AppCompatActivity() {
         while(cursor.moveToNext()) {
             val type = cursor.getInt(1)
             val name = cursor.getString(2)
-            val count = cursor.getInt(3)
+            val count = cursor.getDouble(3)
             val list = mutableListOf<String>()
             val listData = cursor.getString(4).split(",")
             if (listData[0] != "") {
