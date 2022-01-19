@@ -1,6 +1,5 @@
 package com.homubee.waterrate.view
 
-import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
@@ -50,8 +49,10 @@ class CalculateActivity : AppCompatActivity() {
             waterRateList.add(WaterRate(type, name, count, list))
         }
 
+        // 표 내용 생성
         for (i in waterRateList.indices) {
             for (j in 1..3) {
+                // 3번째의 경우 금월지침 입력 받아야 하므로 EditText 객체를 생성
                 val textView = if (j != 3) TextView(this) else EditText(this)
                 textView.gravity = Gravity.CENTER
                 textView.setPadding(Math.round(5*resources.displayMetrics.density))
@@ -61,20 +62,23 @@ class CalculateActivity : AppCompatActivity() {
                 glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
 
                 when(j) {
+                    // 설비/상호명
                     1 -> {
                         textView.text = waterRateList[i].name
                         glparams.leftMargin = Math.round(1*resources.displayMetrics.density)
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
+                    // 전월지침
                     2 -> {
                         textView.text = waterRateList[i].lastMonthCount.toString()
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
+                    // 금월지침 (EditText)
                     3 -> {
                         textView.id = EDITTEXT_ID + i
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-                        textView.hint = "여기에 입력하세요"
+                        textView.hint = "(금월지침)"
                         textView.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
                         Log.d("lastMonth", textView.inputType.toString())
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
@@ -105,21 +109,20 @@ class CalculateActivity : AppCompatActivity() {
         menuNext?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_WITH_TEXT)
         return super.onCreateOptionsMenu(menu)
     }
-    // 금월지침, 숫자 입력 받고 인텐트로 넘겨줌, 기존 액티비티는 종료
+    // 금월지침은 숫자만 입력 받고, 해당 내용은 인텐트로 넘겨줌, 기존 액티비티는 종료
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
-            val thisMonthCountList = mutableListOf<Int>()
+            val thisMonthCountList = mutableListOf<Double>()
             for  (i in waterRateList.indices) {
                 val thisMonthCount = findViewById<EditText>(EDITTEXT_ID + i).text.toString()
                 if (thisMonthCount.isBlank()) {
-                    Toast.makeText(applicationContext, "금월지침을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "내용을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     break
-                } else if (thisMonthCount.contains(' ') || thisMonthCount.contains('-') || thisMonthCount.contains(',') || thisMonthCount.contains('.')) {
+                } else if (thisMonthCount.contains(' ') || thisMonthCount.contains('-') || thisMonthCount.contains(',')) {
                     Toast.makeText(applicationContext, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     break
                 }
-                thisMonthCountList.add(thisMonthCount.toInt())
-                //Log.d("count", thisMonthCountList[i].toString())
+                thisMonthCountList.add(thisMonthCount.toDouble())
             }
 
             if (thisMonthCountList.size == waterRateList.size) {
@@ -132,8 +135,8 @@ class CalculateActivity : AppCompatActivity() {
                     val intent = Intent(applicationContext, ResultActivity::class.java)
                     intent.putExtra("waterRateList",  ArrayList(waterRateList))
                     intent.putExtra("thisMonthCountList", ArrayList(thisMonthCountList))
-                    intent.putExtra("totalUsage", totalUsage)
-                    intent.putExtra("totalRate", totalRate)
+                    intent.putExtra("totalUsage", totalUsage.toInt())
+                    intent.putExtra("totalRate", totalRate.toInt())
                     startActivity(intent)
                     finish()
                 }
