@@ -11,17 +11,17 @@ import android.widget.TextView
 import androidx.core.view.setPadding
 import com.homubee.waterrate.databinding.ActivityResultBinding
 import com.homubee.waterrate.model.WaterRate
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
-// round function
-// Works as same as Excel
-fun roundDigit(number : Double, digits : Int): Double {
-    return (number / 10.0.pow(-digits)).roundToInt() * 10.0.pow(-digits)
-}
 
 class ResultActivity : AppCompatActivity() {
     lateinit var binding: ActivityResultBinding
+
+    // round function
+    // Works as same as Excel
+    private fun roundDigit(number : Double, digits : Int): Double {
+        return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityResultBinding.inflate(layoutInflater)
