@@ -12,7 +12,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "db", null, 1) {
                     "_id integer primary key autoincrement," +
                     "type integer not null," +
                     "name text not null," +
-                    "count integer not null," +
+                    "count real not null," +
                     "list text)")
     }
 

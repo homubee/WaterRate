@@ -91,10 +91,10 @@ class InitializePrivateActivity : AppCompatActivity() {
 
                     if (name.isBlank() || count.isBlank()) {
                         Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
-                    } else if (count.contains(' ') || count.contains('-') || count.contains(',') || count.contains('.')) {
+                    } else if (count.contains(' ') || count.contains('-') || count.contains(',')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
-                        adapter.add(WaterRate(1, name, count.toInt(), publicList))
+                        adapter.add(WaterRate(1, name, count.toDouble(), publicList))
                         if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
                     }
                 })

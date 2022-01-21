@@ -50,10 +50,10 @@ class InitializePublicActivity : AppCompatActivity() {
 
                     if (name.isBlank() || count.isBlank()) {
                         Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
-                    } else if (count.contains(' ') || count.contains('-') || count.contains(',') || count.contains('.')) {
+                    } else if (count.contains(' ') || count.contains('-') || count.contains(',')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
-                        adapter.add(WaterRate(0, name, count.toInt(), privateList))
+                        adapter.add(WaterRate(0, name, count.toDouble(), privateList))
                         if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
                     }
                 })

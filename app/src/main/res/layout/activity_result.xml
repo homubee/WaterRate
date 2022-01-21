@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.CalculateActivity"
+    tools:context=".view.ResultActivity"
     android:orientation="vertical">
 
     <TextView
@@ -15,20 +15,12 @@
         android:textSize="20dp"
         android:layout_margin="10dp"
         android:layout_gravity="center"/>
-    <TextView
-        android:id="@+id/tv_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="내용을 입력하세요"
-        android:textSize="20dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="center"/>
     <GridLayout
         android:id="@+id/gl_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:columnCount="3"
+        android:columnCount="5"
         android:background="#000000"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -71,39 +63,31 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="0.5dp"
+            android:layout_marginRight="0.5dp"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="사용량"
+            android:background="#ffffff"
+            android:padding="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="0.5dp"
+            android:layout_marginRight="0.5dp"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="요금"
+            android:background="#ffffff"
+            android:padding="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="0.5dp"
             android:layout_marginRight="1dp"/>
     </GridLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="총 사용량 : " />
-        <EditText
-            android:id="@+id/et_total_usage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="전체 요금 : " />
-        <EditText
-            android:id="@+id/et_total_rate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
-    </LinearLayout>
 
 </LinearLayout>
