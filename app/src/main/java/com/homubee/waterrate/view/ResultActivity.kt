@@ -1,20 +1,55 @@
 package com.homubee.waterrate.view
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
+import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
+import android.view.*
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.setPadding
+import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityResultBinding
 import com.homubee.waterrate.model.WaterRate
+import java.io.File
 
 
 class ResultActivity : AppCompatActivity() {
     lateinit var binding: ActivityResultBinding
+    // 갤러리 인텐트에서 넘어온 이미지를 비트맵 객체로 만들어 화면에 출력
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        try {
+            val option = BitmapFactory.Options()
+            option.inSampleSize = 3
+
+            var inputStream = contentResolver.openInputStream(result.data!!.data!!)
+            val bitmap = BitmapFactory.decodeStream(inputStream, null, option)
+            inputStream!!.close()
+            inputStream = null
+            bitmap?.let {
+                binding.ivPaper.apply {
+                    setImageBitmap(bitmap)
+                    visibility = View.VISIBLE
+                }
+            } ?: let {
+                Log.d("null", "bitmap null.............")
+            }
+        }catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     // round function
     // Works as same as Excel
@@ -182,5 +217,46 @@ class ResultActivity : AppCompatActivity() {
             textView.layoutParams = glparams
             binding.glTable.addView(textView)
         }
+    }
+
+    // 메뉴 등록
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_result, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    // 메뉴별 결과
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.gallery -> {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.type = "image/*"
+            resultLauncher.launch(intent)
+            true
+        }
+        R.id.pdf -> {
+            val document = PdfDocument()
+            // deprecated 되었으므로 다른 방법 추가해야 함
+            val displayMetrics = DisplayMetrics()
+            display?.getRealMetrics(displayMetrics)
+            Log.d("width", displayMetrics.widthPixels.toString())
+            Log.d("height", displayMetrics.heightPixels.toString())
+
+            val page = document.startPage(PdfDocument.PageInfo.Builder(displayMetrics.widthPixels, displayMetrics.heightPixels, 1).create())
+
+            val content = binding.root.rootView
+            content.draw(page.canvas)
+            document.finishPage(page)
+
+            val file = File(filesDir, "result.pdf")
+            document.writeTo(file.outputStream())
+            document.close()
+
+            Toast.makeText(applicationContext, "pdf 파일이 생성되었습니다.", Toast.LENGTH_SHORT)
+            true
+        }
+        R.id.save -> {
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }
