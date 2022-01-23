@@ -1,17 +1,14 @@
 package com.homubee.waterrate.view
 
-import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.GridLayout
@@ -23,11 +20,14 @@ import androidx.core.view.setPadding
 import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityResultBinding
 import com.homubee.waterrate.model.WaterRate
+import com.homubee.waterrate.util.DBHelper
 import java.io.File
 
 
 class ResultActivity : AppCompatActivity() {
     lateinit var binding: ActivityResultBinding
+    lateinit var totalWaterRateList: MutableList<WaterRate>
+    lateinit var thisMonthCountList: MutableList<Double>
     // 갤러리 인텐트에서 넘어온 이미지를 비트맵 객체로 만들어 화면에 출력
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         try {
@@ -65,8 +65,8 @@ class ResultActivity : AppCompatActivity() {
 
         // intent 로부터 데이터 전달 받음
         val intent = intent
-        val totalWaterRateList = intent.getParcelableArrayListExtra<Parcelable>("waterRateList") as MutableList<WaterRate>
-        val thisMonthCountList = intent.getParcelableArrayListExtra<Parcelable>("thisMonthCountList") as MutableList<Double>
+        totalWaterRateList = intent.getParcelableArrayListExtra<Parcelable>("waterRateList") as MutableList<WaterRate>
+        thisMonthCountList = intent.getParcelableArrayListExtra<Parcelable>("thisMonthCountList") as MutableList<Double>
         val totalUsage = intent.getIntExtra("totalUsage", 0)
         val totalRate = intent.getIntExtra("totalRate", 0)
         val ratePerOne: Double = totalRate / totalUsage.toDouble()
@@ -250,10 +250,15 @@ class ResultActivity : AppCompatActivity() {
             document.writeTo(file.outputStream())
             document.close()
 
-            Toast.makeText(applicationContext, "pdf 파일이 생성되었습니다.", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "pdf 파일이 생성되었습니다.", Toast.LENGTH_SHORT).show()
             true
         }
         R.id.save -> {
+            val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
+            for (i in totalWaterRateList.indices) {
+                db.execSQL("update water_rate set count = " + thisMonthCountList[i] + " where name = '" + totalWaterRateList[i].name + "';")
+            }
+            Toast.makeText(this, "전월지침을 갱신하였습니다.", Toast.LENGTH_SHORT).show()
             true
         }
         else -> super.onOptionsItemSelected(item)
