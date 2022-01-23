@@ -4,6 +4,7 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -56,6 +57,19 @@ class ResultActivity : AppCompatActivity() {
     // Works as same as Excel
     private fun roundDigit(number : Double, digits : Int): Double {
         return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
+    }
+
+    private fun putcomma(number: Int): String {
+        var ret = StringBuilder(number.toString())
+        var count = 0
+        for (i in ret.length-1 downTo 0) {
+            count++;
+            if (count == 3 && i != 0) {
+                ret.insert(i, ',')
+                count = 0
+            }
+        }
+        return ret.toString()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,9 +140,10 @@ class ResultActivity : AppCompatActivity() {
         for (i in totalWaterRateList.indices) {
             for (j in 1..5) {
                 val textView = TextView(this)
-                textView.gravity = Gravity.CENTER
-                textView.setPadding(Math.round(5*resources.displayMetrics.density))
+                textView.gravity = Gravity.RIGHT
+                textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
+                textView.setTextColor(Color.BLACK)
 
                 val glparams = GridLayout.LayoutParams()
                 glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -136,42 +151,39 @@ class ResultActivity : AppCompatActivity() {
                 when(j) {
                     // 설비/상호명
                     1 -> {
+                        textView.gravity = Gravity.CENTER
                         textView.text = totalWaterRateList[i].name
                         glparams.leftMargin = Math.round(1*resources.displayMetrics.density)
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 전월지침
                     2 -> {
-                        textView.text = totalWaterRateList[i].lastMonthCount.toString()
+                        textView.text = totalWaterRateList[i].lastMonthCount.toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 금월지침
                     3 -> {
-                        textView.text = thisMonthCountList[i].toString()
+                        textView.text = thisMonthCountList[i].toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 사용량
                     4 -> {
-                        textView.text = usageList[i].toString()
+                        textView.text = usageList[i].toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 요금
                     5 -> {
-                        textView.text = rateList[i].toString()
+                        textView.text = putcomma(rateList[i])
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                     }
                     else -> ""
                 }
 
-                glparams.topMargin = if (i == 0) {
-                    Math.round(0.5*resources.displayMetrics.density).toInt()
-                } else {
-                    Math.round(1*resources.displayMetrics.density)
-                }
+                glparams.topMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 glparams.bottomMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
 
                 textView.layoutParams = glparams
@@ -182,9 +194,11 @@ class ResultActivity : AppCompatActivity() {
         // 전체 합산 수치 출력
         for (i in 1..3) {
             val textView = TextView(this)
-            textView.gravity = Gravity.CENTER
-            textView.setPadding(Math.round(5*resources.displayMetrics.density))
+            textView.gravity = Gravity.RIGHT
+            textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
+            textView.setTextColor(Color.BLACK)
+            textView.setTypeface(null, Typeface.BOLD)
 
             val glparams = GridLayout.LayoutParams()
             glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -199,13 +213,13 @@ class ResultActivity : AppCompatActivity() {
                 }
                 // 전체 사용량
                 2 -> {
-                    textView.text = totalUsage.toDouble().toString()
+                    textView.text = totalUsage.toDouble().toString() + " "
                     glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 }
                 // 전체 요금
                 3 -> {
-                    textView.text = totalRate.toString()
+                    textView.text = putcomma(totalRate)
                     glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                 }

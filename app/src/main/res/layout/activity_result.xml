@@ -16,8 +16,10 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="&lt;수도 요금 계산표&gt;"
+            android:text="&lt;수도 요금 정산 내역&gt;"
             android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:layout_gravity="center"/>
@@ -44,10 +46,12 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="설비/상호"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="#ffffff"
-                android:padding="5dp"
+                android:padding="0.1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.5dp"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="0.5dp"/>
             <TextView
@@ -56,10 +60,12 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="전월지침"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="#ffffff"
-                android:padding="5dp"
+                android:padding="0.1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.5dp"
                 android:layout_marginLeft="0.5dp"
                 android:layout_marginRight="0.5dp"/>
             <TextView
@@ -68,10 +74,12 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="금월지침"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="#ffffff"
-                android:padding="5dp"
+                android:padding="0.1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.5dp"
                 android:layout_marginLeft="0.5dp"
                 android:layout_marginRight="0.5dp"/>
             <TextView
@@ -80,10 +88,12 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="사용량"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="#ffffff"
-                android:padding="5dp"
+                android:padding="0.1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.5dp"
                 android:layout_marginLeft="0.5dp"
                 android:layout_marginRight="0.5dp"/>
             <TextView
@@ -92,10 +102,12 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="요금"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="#ffffff"
-                android:padding="5dp"
+                android:padding="0.1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.5dp"
                 android:layout_marginLeft="0.5dp"
                 android:layout_marginRight="1dp"/>
         </GridLayout>
