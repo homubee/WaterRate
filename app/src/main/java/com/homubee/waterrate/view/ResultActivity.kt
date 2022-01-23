@@ -32,6 +32,7 @@ class ResultActivity : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         try {
             val option = BitmapFactory.Options()
+            // 임의로 설정한 값, 알고리즘 적용하여 설정해야 함
             option.inSampleSize = 3
 
             var inputStream = contentResolver.openInputStream(result.data!!.data!!)
@@ -235,15 +236,13 @@ class ResultActivity : AppCompatActivity() {
         }
         R.id.pdf -> {
             val document = PdfDocument()
-            // deprecated 되었으므로 다른 방법 추가해야 함
-            val displayMetrics = DisplayMetrics()
-            display?.getRealMetrics(displayMetrics)
-            Log.d("width", displayMetrics.widthPixels.toString())
-            Log.d("height", displayMetrics.heightPixels.toString())
 
-            val page = document.startPage(PdfDocument.PageInfo.Builder(displayMetrics.widthPixels, displayMetrics.heightPixels, 1).create())
+            val content = binding.llMain
+            Log.d("width", binding.root.width.toString())
+            Log.d("height", binding.root.height.toString())
 
-            val content = binding.root.rootView
+            val page = document.startPage(PdfDocument.PageInfo.Builder(content.width, content.height, 1).create())
+
             content.draw(page.canvas)
             document.finishPage(page)
 
