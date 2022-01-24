@@ -121,6 +121,9 @@ class CalculateActivity : AppCompatActivity() {
                 } else if (thisMonthCount.contains(' ') || thisMonthCount.contains('-') || thisMonthCount.contains(',')) {
                     Toast.makeText(applicationContext, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     break
+                } else if (thisMonthCount.toDouble() > 9999.5) {
+                    Toast.makeText(applicationContext, "지침 숫자는 9999.5를 넘을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    break;
                 }
                 thisMonthCountList.add(thisMonthCount.toDouble())
             }

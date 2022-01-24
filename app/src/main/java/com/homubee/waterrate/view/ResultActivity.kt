@@ -66,7 +66,7 @@ class ResultActivity : AppCompatActivity() {
 
     // calculate inSampleSize function
     // code from https://developer.android.com/topic/performance/graphics/load-bitmap?hl=ko
-    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         // Raw height and width of image
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
@@ -126,7 +126,12 @@ class ResultActivity : AppCompatActivity() {
 
         // 상위 3개 리스트 초기화
         for (i in totalWaterRateList.indices) {
-            usageList.add(thisMonthCountList[i] - totalWaterRateList[i].lastMonthCount)
+            // 지침 대소관계가 뒤바뀌어 있다면 오버플로우이므로 감안하여 계산
+            if (thisMonthCountList[i] >= totalWaterRateList[i].lastMonthCount) {
+                usageList.add(thisMonthCountList[i] - totalWaterRateList[i].lastMonthCount)
+            } else {
+                usageList.add(10000 - totalWaterRateList[i].lastMonthCount + thisMonthCountList[i])
+            }
             rateList.add(roundDigit(ratePerOne*usageList[i], -1).toInt())
             diffRateList.add(roundDigit(ratePerOne*usageList[i], 0).toInt())
         }
