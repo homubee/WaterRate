@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="&lt;수도 요금 계산표&gt;"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_margin="10dp"
         android:layout_gravity="center"/>
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="내용을 입력하세요"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_margin="10dp"
         android:layout_gravity="center"/>
     <GridLayout

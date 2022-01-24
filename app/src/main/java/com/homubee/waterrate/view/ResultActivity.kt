@@ -4,12 +4,14 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.widget.GridLayout
 import android.widget.TextView
@@ -28,15 +30,25 @@ class ResultActivity : AppCompatActivity() {
     lateinit var binding: ActivityResultBinding
     lateinit var totalWaterRateList: MutableList<WaterRate>
     lateinit var thisMonthCountList: MutableList<Double>
+
     // 갤러리 인텐트에서 넘어온 이미지를 비트맵 객체로 만들어 화면에 출력
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         try {
-            val option = BitmapFactory.Options()
-            // 임의로 설정한 값, 알고리즘 적용하여 설정해야 함
-            option.inSampleSize = 3
-
             var inputStream = contentResolver.openInputStream(result.data!!.data!!)
-            val bitmap = BitmapFactory.decodeStream(inputStream, null, option)
+            val rootView = binding.root.rootView
+
+            val option = BitmapFactory.Options()
+
+            // 너무 큰 이미지는 미리 처리
+            option.inJustDecodeBounds = true
+            var bitmap = BitmapFactory.decodeStream(inputStream, null, option)
+
+            option.inSampleSize = calculateInSampleSize(option, rootView.width, rootView.height)
+
+            option.inJustDecodeBounds = false
+            inputStream = contentResolver.openInputStream(result.data!!.data!!)
+            bitmap = BitmapFactory.decodeStream(inputStream, null, option)
+
             inputStream!!.close()
             inputStream = null
             bitmap?.let {
@@ -47,15 +59,51 @@ class ResultActivity : AppCompatActivity() {
             } ?: let {
                 Log.d("null", "bitmap null.............")
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // calculate inSampleSize function
+    // code from https://developer.android.com/topic/performance/graphics/load-bitmap?hl=ko
+    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        // Raw height and width of image
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
     }
 
     // round function
     // Works as same as Excel
     private fun roundDigit(number : Double, digits : Int): Double {
         return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
+    }
+
+    // comma on number function
+    private fun putComma(number: Int): String {
+        var ret = StringBuilder(number.toString())
+        var count = 0
+        for (i in ret.length-1 downTo 0) {
+            count++;
+            if (count == 3 && i != 0) {
+                ret.insert(i, ',')
+                count = 0
+            }
+        }
+        return ret.toString()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,9 +174,11 @@ class ResultActivity : AppCompatActivity() {
         for (i in totalWaterRateList.indices) {
             for (j in 1..5) {
                 val textView = TextView(this)
-                textView.gravity = Gravity.CENTER
-                textView.setPadding(Math.round(5*resources.displayMetrics.density))
+                textView.gravity = Gravity.RIGHT
+                textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
+                textView.setTextColor(Color.BLACK)
 
                 val glparams = GridLayout.LayoutParams()
                 glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -136,42 +186,39 @@ class ResultActivity : AppCompatActivity() {
                 when(j) {
                     // 설비/상호명
                     1 -> {
+                        textView.gravity = Gravity.CENTER
                         textView.text = totalWaterRateList[i].name
                         glparams.leftMargin = Math.round(1*resources.displayMetrics.density)
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 전월지침
                     2 -> {
-                        textView.text = totalWaterRateList[i].lastMonthCount.toString()
+                        textView.text = totalWaterRateList[i].lastMonthCount.toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 금월지침
                     3 -> {
-                        textView.text = thisMonthCountList[i].toString()
+                        textView.text = thisMonthCountList[i].toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 사용량
                     4 -> {
-                        textView.text = usageList[i].toString()
+                        textView.text = usageList[i].toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 요금
                     5 -> {
-                        textView.text = rateList[i].toString()
+                        textView.text = putComma(rateList[i])
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                     }
                     else -> ""
                 }
 
-                glparams.topMargin = if (i == 0) {
-                    Math.round(0.5*resources.displayMetrics.density).toInt()
-                } else {
-                    Math.round(1*resources.displayMetrics.density)
-                }
+                glparams.topMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 glparams.bottomMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
 
                 textView.layoutParams = glparams
@@ -182,9 +229,12 @@ class ResultActivity : AppCompatActivity() {
         // 전체 합산 수치 출력
         for (i in 1..3) {
             val textView = TextView(this)
-            textView.gravity = Gravity.CENTER
-            textView.setPadding(Math.round(5*resources.displayMetrics.density))
+            textView.gravity = Gravity.RIGHT
+            textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
+            textView.setTextColor(Color.BLACK)
+            textView.setTypeface(null, Typeface.BOLD)
 
             val glparams = GridLayout.LayoutParams()
             glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -199,13 +249,13 @@ class ResultActivity : AppCompatActivity() {
                 }
                 // 전체 사용량
                 2 -> {
-                    textView.text = totalUsage.toDouble().toString()
+                    textView.text = totalUsage.toDouble().toString() + " "
                     glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 }
                 // 전체 요금
                 3 -> {
-                    textView.text = totalRate.toString()
+                    textView.text = putComma(totalRate)
                     glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                 }
