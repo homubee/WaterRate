@@ -34,6 +34,7 @@ class InitializePrivateActivity : AppCompatActivity() {
 
         // intent 로부터 데이터 전달 받음
         val intent = intent
+        val nameSet = intent.getSerializableExtra("nameSet") as MutableSet<String>
         publicDataList = intent.getParcelableArrayListExtra<Parcelable>("public") as MutableList<WaterRate>
         adapter = WaterRateAdapter(1, mutableListOf<WaterRate>())
         binding.recyclerPrivate.layoutManager = LinearLayoutManager(this)
@@ -41,8 +42,10 @@ class InitializePrivateActivity : AppCompatActivity() {
 
         // 모든 내용이 삭제되었을 시 설명을 출력할 수 있도록 삭제 시마다 콜백함수를 통해 체크 및 작업 수행
         // 내용 삭제 시 내부에 가지고 있는 리스트 목록에서도 삭제
+        // 내용 삭제 시 이름 중복 방지 집합에서도 제거함
         adapter.buttonClickListener = object: WaterRateAdapter.ButtonCallbackListener{
             override fun callBack(name: String) {
+                nameSet.remove(name)
                 for (i in publicDataList.indices) {
                     if (publicDataList[i].name == name) {
                         publicDataList.removeAt(i)
@@ -91,9 +94,14 @@ class InitializePrivateActivity : AppCompatActivity() {
 
                     if (name.isBlank() || count.isBlank()) {
                         Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                    } else if (nameSet.contains(name)) {
+                        Toast.makeText(context, "이름이 중복되지 않아야 합니다.", Toast.LENGTH_SHORT).show()
                     } else if (count.contains(' ') || count.contains('-') || count.contains(',')) {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                    } else if (count.toDouble() > 9999.5) {
+                        Toast.makeText(context, "지침 숫자는 9999.5를 넘을 수 없습니다.", Toast.LENGTH_SHORT).show()
                     } else {
+                        nameSet.add(name)
                         adapter.add(WaterRate(1, name, count.toDouble(), publicList))
                         if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
                     }
