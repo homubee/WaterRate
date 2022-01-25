@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
                 setPositiveButton("yes", DialogInterface.OnClickListener { p0, p1 ->
                     val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
                     db.execSQL("delete from water_rate")
-                    Toast.makeText(applicationContext, "reset", Toast.LENGTH_SHORT).show()
                     val intent = Intent(applicationContext, InitializePublicActivity::class.java)
                     startActivity(intent)
                 })
@@ -41,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnCalculate.setOnClickListener {
-            Toast.makeText(this, "calculate", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, CalculateActivity::class.java)
             startActivity(intent)
         }

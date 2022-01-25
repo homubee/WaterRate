@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/gallery"
-        android:title="gallery"
+        android:title="Gallery"
         android:icon="@drawable/ic_baseline_image_search_24"
         android:iconTint="@color/white"
         app:showAsAction="always" />
     <item
         android:id="@+id/pdf"
-        android:title="import as pdf"
+        android:title="Export as pdf"
         android:icon="@drawable/ic_baseline_picture_as_pdf_24"
         android:iconTint="@color/white"
         app:showAsAction="always" />
     <item
         android:id="@+id/save"
-        android:title="save data"
+        android:title="Save data"
         android:icon="@drawable/ic_baseline_save_24"
         android:iconTint="@color/white"
         app:showAsAction="always" />
