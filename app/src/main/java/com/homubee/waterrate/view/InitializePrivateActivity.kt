@@ -11,9 +11,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.homubee.waterrate.databinding.ActivityInitializePrivateBinding
 import com.homubee.waterrate.databinding.DialogWaterInputBinding
@@ -59,10 +61,24 @@ class InitializePrivateActivity : AppCompatActivity() {
         // 추가 버튼 클릭 시 다이얼로그 출력
         binding.fabAdd.setOnClickListener {
             val dialogBinding = DialogWaterInputBinding.inflate(layoutInflater)
+            val firstView = dialogBinding.root.getChildAt(0) as LinearLayout
             dialogBinding.tvName.text = "상호명"
             AlertDialog.Builder(this).apply {
                 setTitle("개인 수도 입력")
                 setIcon(android.R.drawable.ic_menu_edit)
+
+                // 계량기 유무 뷰그룹 활성화
+                dialogBinding.llCounter.visibility = View.VISIBLE
+                // 텍스트뷰 동적으로 추가
+                val textView = TextView(applicationContext)
+                textView.text = "공용 수도 선택"
+                firstView.addView(textView)
+                val llparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                llparams.leftMargin = Math.round(10*resources.displayMetrics.density)
+                llparams.rightMargin = Math.round(10*resources.displayMetrics.density)
+                llparams.topMargin = Math.round(5*resources.displayMetrics.density)
+                llparams.bottomMargin = Math.round(10*resources.displayMetrics.density)
+                textView.layoutParams = llparams
 
                 // 체크 박스 동적으로 추가
                 val checkBoxList = mutableListOf<CheckBox>()
@@ -73,7 +89,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                     checkBoxList[i].layoutParams = llparams
                     checkBoxList[i].id = CHECKBOX_ID+i
                     checkBoxList[i].text = publicDataList[i].name
-                    dialogBinding.root.addView(checkBoxList[i])
+                    firstView.addView(checkBoxList[i])
                 }
                 setView(dialogBinding.root)
 
@@ -85,7 +101,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                     val publicList = mutableListOf<String>()
 
                     for (i in publicDataList.indices) {
-                        val publicCheckBox = dialogBinding.root.findViewById<CheckBox>(CHECKBOX_ID+i)
+                        val publicCheckBox = firstView.findViewById<CheckBox>(CHECKBOX_ID+i)
                         if (publicCheckBox.isChecked) {
                             publicDataList[i].waterRateList.add(name)
                             publicList.add(publicCheckBox.text.toString())
@@ -100,6 +116,8 @@ class InitializePrivateActivity : AppCompatActivity() {
                         Toast.makeText(context, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else if (count.toDouble() > 9999.5) {
                         Toast.makeText(context, "지침 숫자는 9999.5를 넘을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    } else if (dialogBinding.rgCounter.checkedRadioButtonId == -1) {
+                        Toast.makeText(context, "계량기 유무를 체크해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         nameSet.add(name)
                         adapter.add(WaterRate(1, name, count.toDouble(), publicList))
