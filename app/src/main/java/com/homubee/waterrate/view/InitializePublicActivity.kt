@@ -25,7 +25,7 @@ class InitializePublicActivity : AppCompatActivity() {
         val binding = ActivityInitializePublicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = WaterRateAdapter(0, mutableListOf<WaterRate>())
+        adapter = WaterRateAdapter(mutableListOf<WaterRate>())
         binding.recyclerPublic.layoutManager = LinearLayoutManager(this)
         binding.recyclerPublic.adapter = adapter
 

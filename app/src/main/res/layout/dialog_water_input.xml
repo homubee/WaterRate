@@ -70,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <RadioButton
+                        android:id="@+id/rdbtn_has_counter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="있음"
@@ -78,6 +79,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"/>
                     <RadioButton
+                        android:id="@+id/rdbtn_no_counter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="없음"
