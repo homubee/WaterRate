@@ -71,15 +71,24 @@ class CalculateActivity : AppCompatActivity() {
                     // 전월지침
                     2 -> {
                         textView.text = waterRateList[i].lastMonthCount.toString()
+                        // 계량기 없는 경우는 지침 정보를 표시하지 않음
+                        if (waterRateList[i].type == 2) {
+                            textView.text = ""
+                        }
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     }
                     // 금월지침 (EditText)
                     3 -> {
                         textView.id = EDITTEXT_ID + i
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                         textView.hint = "(금월지침)"
                         textView.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                        // 계량기 없는 경우는 입력하지 못하도록 처리
+                        if (waterRateList[i].type == 2) {
+                            textView.hint = ""
+                            textView.isEnabled = false
+                        }
                         Log.d("lastMonth", textView.inputType.toString())
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
@@ -114,17 +123,19 @@ class CalculateActivity : AppCompatActivity() {
         0 -> {
             val thisMonthCountList = mutableListOf<Double>()
             for  (i in waterRateList.indices) {
-                val thisMonthCount = findViewById<EditText>(EDITTEXT_ID + i).text.toString()
-                if (thisMonthCount.isBlank()) {
+                var thisMonthCount = findViewById<EditText>(EDITTEXT_ID + i).text.toString()
+                if (waterRateList[i].type != 2 && thisMonthCount.isBlank()) {
                     Toast.makeText(applicationContext, "내용을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     break
                 } else if (thisMonthCount.contains(' ') || thisMonthCount.contains('-') || thisMonthCount.contains(',')) {
                     Toast.makeText(applicationContext, "숫자만 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     break
-                } else if (thisMonthCount.toDouble() > 9999.5) {
+                } else if (thisMonthCount.isNotBlank() && thisMonthCount.toDouble() > 9999.5) {
                     Toast.makeText(applicationContext, "지침 숫자는 9999.5를 넘을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                    break;
+                    break
                 }
+
+                if (waterRateList[i].type == 2) thisMonthCount = "-1"
                 thisMonthCountList.add(thisMonthCount.toDouble())
             }
 

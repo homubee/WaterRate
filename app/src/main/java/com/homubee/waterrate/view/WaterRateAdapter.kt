@@ -10,7 +10,7 @@ import com.homubee.waterrate.model.WaterRate
 
 class WaterRateViewHolder(val binding: ItemWaterRateBinding) : RecyclerView.ViewHolder(binding.root)
 
-class WaterRateAdapter(private val type: Int, val dataList: MutableList<WaterRate>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class WaterRateAdapter(val dataList: MutableList<WaterRate>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     lateinit var buttonClickListener: ButtonCallbackListener
 
     fun add(data: WaterRate) {
@@ -38,9 +38,12 @@ class WaterRateAdapter(private val type: Int, val dataList: MutableList<WaterRat
         val binding = (holder as WaterRateViewHolder).binding
         binding.tvNameInput.text = dataList[position].name
         binding.tvCountInput.text = dataList[position].lastMonthCount.toString()
+        if (dataList[position].type == 2) {
+            binding.tvCountInput.text = "없음"
+        }
 
         // 공용 수도 관련 출력 부분
-        if (type == 1) {
+        if (dataList[position].type != 0) {
             binding.tvName.text = "상호명 :"
             binding.tvPublic.visibility = View.VISIBLE
             if (!dataList[position].waterRateList.isEmpty()) {

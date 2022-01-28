@@ -223,6 +223,11 @@ class ResultActivity : AppCompatActivity() {
                     else -> ""
                 }
 
+                // 계량기 없는 경우는 지침과 사용량 정보를 표시하지 않음
+                if (totalWaterRateList[i].type == 2 && j != 1 && j != 5) {
+                    textView.text = ""
+                }
+
                 glparams.topMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 glparams.bottomMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
 
