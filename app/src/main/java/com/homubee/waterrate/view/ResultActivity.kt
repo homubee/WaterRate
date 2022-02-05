@@ -1,6 +1,7 @@
 package com.homubee.waterrate.view
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -8,7 +9,9 @@ import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.util.TypedValue
@@ -18,12 +21,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityResultBinding
 import com.homubee.waterrate.model.WaterRate
 import com.homubee.waterrate.util.DBHelper
 import java.io.File
+import java.io.FileOutputStream
 
 
 class ResultActivity : AppCompatActivity() {
@@ -32,7 +38,7 @@ class ResultActivity : AppCompatActivity() {
     lateinit var thisMonthCountList: MutableList<Double>
 
     // 갤러리 인텐트에서 넘어온 이미지를 비트맵 객체로 만들어 화면에 출력
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+    private val galleryResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         try {
             var inputStream = contentResolver.openInputStream(result.data!!.data!!)
             val rootView = binding.root.rootView
@@ -62,6 +68,32 @@ class ResultActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // pdf 저장 경로 선택
+    private val pdfResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        val uri = result.data?.data
+        Log.d("URI", uri.toString())
+
+        val document = PdfDocument()
+
+        val content = binding.llMain
+        Log.d("width", binding.root.width.toString())
+        Log.d("height", binding.root.height.toString())
+
+        val page = document.startPage(PdfDocument.PageInfo.Builder(content.width, content.height, 1).create())
+
+        content.draw(page.canvas)
+        document.finishPage(page)
+
+        if (uri != null) {
+            val fileDescriptor = contentResolver.openFileDescriptor(uri, "w")
+            document.writeTo(FileOutputStream(fileDescriptor?.fileDescriptor))
+        } else {
+            Toast.makeText(this, "파일 저장 실패", Toast.LENGTH_SHORT).show()
+        }
+
+        document.close()
     }
 
     // calculate inSampleSize function
@@ -153,7 +185,12 @@ class ResultActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else {
+            }
+        }
+
+        for (i in totalWaterRateList.indices) {
+            // 공용 수도 아닐 경우 체크
+            if (totalWaterRateList[i].type != 0) {
                 // 공용 수도 아닌 경우 인덱스 체크하며 실제값과 차이가 가장 큰 것과 작은 것 계산, 반올림 요금 차이 리스트도 여기서 완전히 확정됨
                 if (maxIndex == 0) {
                     maxIndex = i
@@ -291,26 +328,17 @@ class ResultActivity : AppCompatActivity() {
         R.id.gallery -> {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
-            resultLauncher.launch(intent)
+            galleryResultLauncher.launch(intent)
             true
         }
         R.id.pdf -> {
-            val document = PdfDocument()
-
-            val content = binding.llMain
-            Log.d("width", binding.root.width.toString())
-            Log.d("height", binding.root.height.toString())
-
-            val page = document.startPage(PdfDocument.PageInfo.Builder(content.width, content.height, 1).create())
-
-            content.draw(page.canvas)
-            document.finishPage(page)
-
-            val file = File(filesDir, "result.pdf")
-            document.writeTo(file.outputStream())
-            document.close()
-
-            Toast.makeText(this, "pdf 파일이 생성되었습니다.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "application/pdf"
+                putExtra(Intent.EXTRA_TITLE, "수도 요금 정산 내역")
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/")
+            }
+            pdfResultLauncher.launch(intent)
             true
         }
         R.id.save -> {

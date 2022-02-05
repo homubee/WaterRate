@@ -48,7 +48,6 @@ class WaterRateAdapter(val dataList: MutableList<WaterRate>) : RecyclerView.Adap
             binding.tvPublic.visibility = View.VISIBLE
             if (!dataList[position].waterRateList.isEmpty()) {
                 binding.tvPublic.apply {
-                    text = "공용 수도 : "
                     for (i in dataList[position].waterRateList.indices) {
                         text = text.toString() + if (i != 0) {", "} else {""} + dataList[position].waterRateList[i]
                     }
