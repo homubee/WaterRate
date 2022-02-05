@@ -185,7 +185,12 @@ class ResultActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else {
+            }
+        }
+
+        for (i in totalWaterRateList.indices) {
+            // 공용 수도 아닐 경우 체크
+            if (totalWaterRateList[i].type != 0) {
                 // 공용 수도 아닌 경우 인덱스 체크하며 실제값과 차이가 가장 큰 것과 작은 것 계산, 반올림 요금 차이 리스트도 여기서 완전히 확정됨
                 if (maxIndex == 0) {
                     maxIndex = i
