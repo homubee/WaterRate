@@ -46,7 +46,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="설비/상호"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:background="#ffffff"
@@ -61,7 +61,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="전월지침"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:background="#ffffff"
@@ -76,7 +76,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="금월지침"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:background="#ffffff"
@@ -91,7 +91,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="사용량"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:background="#ffffff"
@@ -106,7 +106,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:text="요금"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:background="#ffffff"
@@ -116,6 +116,31 @@
                 android:layout_marginLeft="0.5dp"
                 android:layout_marginRight="1dp"/>
         </GridLayout>
+        <LinearLayout
+            android:id="@+id/ll_size_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <Button
+                android:id="@+id/btn_decrease_table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="표 줄이기"
+                android:layout_margin="10dp"/>
+            <Button
+                android:id="@+id/btn_increase_table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="표 키우기"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="설정 완료"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
 </ScrollView>
