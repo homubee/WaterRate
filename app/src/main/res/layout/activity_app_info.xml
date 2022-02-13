@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.AppInfoActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/tv_app_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WaterRate 1.00"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Copyright 2022 Homubee"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/tv_icon_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="App icon is designed by Freepik from Flaticon"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+
+</LinearLayout>
