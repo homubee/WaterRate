@@ -25,6 +25,8 @@ class InitializePublicActivity : AppCompatActivity() {
         val binding = ActivityInitializePublicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "공용 수도 추가"
+
         adapter = WaterRateAdapter(mutableListOf<WaterRate>())
         binding.recyclerPublic.layoutManager = LinearLayoutManager(this)
         binding.recyclerPublic.adapter = adapter

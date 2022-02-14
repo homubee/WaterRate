@@ -140,6 +140,8 @@ class ResultActivity : AppCompatActivity() {
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "계산 결과"
+
         // intent 로부터 데이터 전달 받음
         val intent = intent
         totalWaterRateList = intent.getParcelableArrayListExtra<Parcelable>("waterRateList") as MutableList<WaterRate>

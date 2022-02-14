@@ -32,6 +32,8 @@ class CalculateActivity : AppCompatActivity() {
         binding = ActivityCalculateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "요금 계산"
+
         // DB 데이터를 불러와 객체 생성
         val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
         var cursor = db.rawQuery("select * from water_rate", null)
@@ -145,7 +147,6 @@ class CalculateActivity : AppCompatActivity() {
                 if (totalUsage.isBlank() || totalRate.isBlank()) {
                     Toast.makeText(applicationContext, "내용을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(applicationContext, "데이터가 저장되었습니다.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(applicationContext, ResultActivity::class.java)
                     intent.putExtra("waterRateList",  ArrayList(waterRateList))
                     intent.putExtra("thisMonthCountList", ArrayList(thisMonthCountList))
