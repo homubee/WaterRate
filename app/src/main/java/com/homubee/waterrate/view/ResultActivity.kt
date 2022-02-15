@@ -1,7 +1,6 @@
 package com.homubee.waterrate.view
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -9,7 +8,6 @@ import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -17,18 +15,18 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.GridLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.net.toUri
+import androidx.core.view.isVisible
+import androidx.core.view.iterator
 import androidx.core.view.setPadding
 import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityResultBinding
 import com.homubee.waterrate.model.WaterRate
 import com.homubee.waterrate.util.DBHelper
-import java.io.File
 import java.io.FileOutputStream
 
 
@@ -143,6 +141,8 @@ class ResultActivity : AppCompatActivity() {
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "계산 결과"
+
         // intent 로부터 데이터 전달 받음
         val intent = intent
         totalWaterRateList = intent.getParcelableArrayListExtra<Parcelable>("waterRateList") as MutableList<WaterRate>
@@ -219,8 +219,7 @@ class ResultActivity : AppCompatActivity() {
                 textView.gravity = Gravity.RIGHT
                 textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
-                textView.setTextColor(Color.BLACK)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
 
                 val glparams = GridLayout.LayoutParams()
                 glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -279,8 +278,7 @@ class ResultActivity : AppCompatActivity() {
             textView.gravity = Gravity.RIGHT
             textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
-            textView.setTextColor(Color.BLACK)
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
             textView.setTypeface(null, Typeface.BOLD)
 
             val glparams = GridLayout.LayoutParams()
@@ -315,6 +313,38 @@ class ResultActivity : AppCompatActivity() {
             textView.layoutParams = glparams
             binding.glTable.addView(textView)
         }
+
+        binding.tvTableSize.apply {
+            text = text.toString() + (binding.sbTableSize.progress).toString()
+        }
+
+        // seekBar를 통한 표 크기 조절
+        binding.sbTableSize.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvTableSize.apply {
+                    text = "크기 : " + (binding.sbTableSize.progress).toString()
+                }
+                for (textView in binding.glTable) {
+                    if (textView is TextView) {
+                        Log.d("Progress", (seekBar!!.progress).toString())
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, seekBar!!.progress.toFloat())
+                    }
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        // 크기 결정 버튼
+        binding.btnSet.setOnClickListener {
+            binding.tvTableSize.visibility = View.GONE
+            binding.btnSet.visibility = View.GONE
+            binding.sbTableSize.visibility = View.GONE
+        }
     }
 
     // 메뉴 등록
@@ -332,14 +362,19 @@ class ResultActivity : AppCompatActivity() {
             true
         }
         R.id.pdf -> {
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "application/pdf"
-                putExtra(Intent.EXTRA_TITLE, "수도 요금 정산 내역")
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/")
+            if (!binding.btnSet.isVisible) {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "application/pdf"
+                    putExtra(Intent.EXTRA_TITLE, "수도 요금 정산 내역")
+                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/")
+                }
+                pdfResultLauncher.launch(intent)
+                true
+            } else {
+                Toast.makeText(this, "표 크기 설정을 완료해야 합니다.", Toast.LENGTH_SHORT).show()
+                false
             }
-            pdfResultLauncher.launch(intent)
-            true
         }
         R.id.save -> {
             val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase

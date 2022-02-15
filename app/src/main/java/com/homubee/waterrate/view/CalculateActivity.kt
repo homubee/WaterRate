@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
 import android.util.TypedValue
@@ -31,6 +32,8 @@ class CalculateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCalculateBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.title = "요금 계산"
 
         // DB 데이터를 불러와 객체 생성
         val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
@@ -84,6 +87,8 @@ class CalculateActivity : AppCompatActivity() {
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                         textView.hint = "(금월지침)"
                         textView.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                        // 천의자리(4) + 소수점(1) + 소수점 아래 4자리(4)
+                        textView.filters = arrayOf(InputFilter.LengthFilter(9))
                         // 계량기 없는 경우는 입력하지 못하도록 처리
                         if (waterRateList[i].type == 2) {
                             textView.hint = ""
@@ -145,7 +150,6 @@ class CalculateActivity : AppCompatActivity() {
                 if (totalUsage.isBlank() || totalRate.isBlank()) {
                     Toast.makeText(applicationContext, "내용을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(applicationContext, "데이터가 저장되었습니다.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(applicationContext, ResultActivity::class.java)
                     intent.putExtra("waterRateList",  ArrayList(waterRateList))
                     intent.putExtra("thisMonthCountList", ArrayList(thisMonthCountList))

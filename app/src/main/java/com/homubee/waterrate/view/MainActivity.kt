@@ -5,8 +5,11 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.homubee.waterrate.databinding.ActivityMainBinding
 import com.homubee.waterrate.util.DBHelper
 
@@ -50,5 +53,27 @@ class MainActivity : AppCompatActivity() {
         super.onRestart()
         val db: SQLiteDatabase = DBHelper(applicationContext).readableDatabase
         binding.btnCalculate.isEnabled = db.rawQuery("select * from water_rate", null).moveToNext()
+    }
+
+    // 메뉴 버튼 추가 및 액티비티 전환
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuAppInfo: MenuItem? = menu?.add(0, 0, 0, "앱 정보")
+        val menuLicense: MenuItem? = menu?.add(0, 1, 0, "오픈소스 라이선스")
+        return super.onCreateOptionsMenu(menu)
+    }
+    // 금월지침은 숫자만 입력 받고, 해당 내용은 인텐트로 넘겨줌, 기존 액티비티는 종료
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        0 -> {
+            val intent = Intent(applicationContext, AppInfoActivity::class.java)
+            startActivity(intent)
+            true
+        }
+        1 -> {
+            val intent = Intent(applicationContext, OssLicensesMenuActivity::class.java)
+            startActivity(intent)
+            OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스")
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }

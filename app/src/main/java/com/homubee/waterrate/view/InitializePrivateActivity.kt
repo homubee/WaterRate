@@ -34,6 +34,8 @@ class InitializePrivateActivity : AppCompatActivity() {
         val binding = ActivityInitializePrivateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "개인 수도 추가"
+
         // intent 로부터 데이터 전달 받음
         val intent = intent
         val nameSet = intent.getSerializableExtra("nameSet") as MutableSet<String>
