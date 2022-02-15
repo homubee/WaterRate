@@ -15,6 +15,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.GridLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -219,7 +220,6 @@ class ResultActivity : AppCompatActivity() {
                 textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
-                textView.setTextColor(Color.BLACK)
 
                 val glparams = GridLayout.LayoutParams()
                 glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
@@ -279,7 +279,6 @@ class ResultActivity : AppCompatActivity() {
             textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
-            textView.setTextColor(Color.BLACK)
             textView.setTypeface(null, Typeface.BOLD)
 
             val glparams = GridLayout.LayoutParams()
@@ -315,40 +314,36 @@ class ResultActivity : AppCompatActivity() {
             binding.glTable.addView(textView)
         }
 
-        // 크기 증가 버튼
-        binding.btnIncreaseTable.setOnClickListener {
-            for (textView in binding.glTable) {
-                if (textView is TextView) {
-                    val textSize = textView.textSize / resources.displayMetrics.scaledDensity
-                    if (textSize > 16.0f) {
-                        Toast.makeText(this, "더 이상 키울 수 없습니다.", Toast.LENGTH_SHORT).show()
-                        break;
-                    }
-                    Log.d("textSizeI", (textView.textSize / resources.displayMetrics.scaledDensity).toString())
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+1)
-                }
-            }
+        binding.tvTableSize.apply {
+            text = text.toString() + (binding.sbTableSize.progress).toString()
         }
 
-        // 크기 감소 버튼
-        binding.btnDecreaseTable.setOnClickListener {
-            for (textView in binding.glTable) {
-                if (textView is TextView) {
-                    val textSize = textView.textSize / resources.displayMetrics.scaledDensity
-                    if (textSize == 0.0f) {
-                        Toast.makeText(this, "더 이상 줄일 수 없습니다.", Toast.LENGTH_SHORT).show()
-                        break;
+        // seekBar를 통한 표 크기 조절
+        binding.sbTableSize.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvTableSize.apply {
+                    text = "크기 : " + (binding.sbTableSize.progress).toString()
+                }
+                for (textView in binding.glTable) {
+                    if (textView is TextView) {
+                        Log.d("Progress", (seekBar!!.progress).toString())
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, seekBar!!.progress.toFloat())
                     }
-                    Log.d("textSizeI", (textView.textSize / resources.displayMetrics.scaledDensity).toString())
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize-1)
                 }
             }
-        }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
 
         // 크기 결정 버튼
         binding.btnSet.setOnClickListener {
+            binding.tvTableSize.visibility = View.GONE
             binding.btnSet.visibility = View.GONE
-            binding.llSizeBtn.visibility = View.GONE
+            binding.sbTableSize.visibility = View.GONE
         }
     }
 

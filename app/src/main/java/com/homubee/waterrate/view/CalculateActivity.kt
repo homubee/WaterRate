@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
 import android.util.TypedValue
@@ -86,6 +87,8 @@ class CalculateActivity : AppCompatActivity() {
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                         textView.hint = "(금월지침)"
                         textView.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                        // 천의자리(4) + 소수점(1) + 소수점 아래 4자리(4)
+                        textView.filters = arrayOf(InputFilter.LengthFilter(9))
                         // 계량기 없는 경우는 입력하지 못하도록 처리
                         if (waterRateList[i].type == 2) {
                             textView.hint = ""
