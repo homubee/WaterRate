@@ -1,5 +1,6 @@
 package com.homubee.waterrate.view
 
+import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
@@ -155,6 +156,10 @@ class ResultActivity : AppCompatActivity() {
         val usageList = mutableListOf<Double>()
         val rateList = mutableListOf<Int>()
         val diffRateList = mutableListOf<Int>()
+
+        // 표 크기 공유 프리퍼런스 설정
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        binding.sbTableSize.progress = sharedPref.getInt("tableSize", 10)
 
         // 상위 3개 리스트 초기화
         for (i in totalWaterRateList.indices) {
@@ -330,7 +335,7 @@ class ResultActivity : AppCompatActivity() {
         binding.sbTableSize.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.tvTableSize.apply {
-                    text = "크기 : " + (binding.sbTableSize.progress).toString()
+                    text = "표 크기 : " + (binding.sbTableSize.progress).toString()
                 }
                 for (textView in binding.glTable) {
                     if (textView is TextView) {
@@ -352,6 +357,12 @@ class ResultActivity : AppCompatActivity() {
             binding.tvTableSize.visibility = View.GONE
             binding.btnSet.visibility = View.GONE
             binding.sbTableSize.visibility = View.GONE
+
+            // 표 크기 정보 갱신
+            sharedPref.edit().run {
+                putInt("tableSize", binding.sbTableSize.progress)
+                commit()
+            }
         }
     }
 
