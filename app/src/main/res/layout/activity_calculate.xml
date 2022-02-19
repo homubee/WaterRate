@@ -20,14 +20,6 @@
             android:textSize="20sp"
             android:layout_margin="10dp"
             android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/tv_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="내용을 입력하세요"
-            android:textSize="20sp"
-            android:layout_margin="10dp"
-            android:layout_gravity="center"/>
         <GridLayout
             android:id="@+id/gl_table"
             android:layout_width="match_parent"
@@ -95,7 +87,9 @@
                 android:id="@+id/et_total_usage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                android:hint="(내용 입력)"
+                android:gravity="center"/>
         </LinearLayout>
 
         <LinearLayout
@@ -111,7 +105,9 @@
                 android:id="@+id/et_total_rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:hint="(내용 입력)"
+                android:gravity="center"/>
         </LinearLayout>
 
     </LinearLayout>
