@@ -61,8 +61,12 @@ class CalculateActivity : AppCompatActivity() {
                 textView.setPadding(Math.round(5*resources.displayMetrics.density))
                 textView.setBackgroundColor(Color.WHITE)
 
-                val glparams = GridLayout.LayoutParams()
-                glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                val glparams = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setGravity(Gravity.FILL)
+                }
 
                 when(j) {
                     // 설비/상호명
@@ -85,10 +89,10 @@ class CalculateActivity : AppCompatActivity() {
                     3 -> {
                         textView.id = EDITTEXT_ID + i
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                        textView.hint = "(금월지침)"
+                        textView.hint = "(내용 입력)"
                         textView.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-                        // 천의자리(4) + 소수점(1) + 소수점 아래 4자리(4)
-                        textView.filters = arrayOf(InputFilter.LengthFilter(9))
+                        // 천의자리(4) + 소수점(1) + 소수점 아래 1자리(1)
+                        textView.filters = arrayOf(InputFilter.LengthFilter(6))
                         // 계량기 없는 경우는 입력하지 못하도록 처리
                         if (waterRateList[i].type == 2) {
                             textView.hint = ""

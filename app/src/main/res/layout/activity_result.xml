@@ -127,8 +127,8 @@
             android:id="@+id/sb_table_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="50"
-            android:progress="9"
+            android:max="20"
+            android:progress="10"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"/>
         <Button

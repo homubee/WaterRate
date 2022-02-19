@@ -216,13 +216,17 @@ class ResultActivity : AppCompatActivity() {
         for (i in totalWaterRateList.indices) {
             for (j in 1..5) {
                 val textView = TextView(this)
-                textView.gravity = Gravity.RIGHT
+                textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
                 textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
 
-                val glparams = GridLayout.LayoutParams()
-                glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                val glparams = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setGravity(Gravity.FILL)
+                }
 
                 when(j) {
                     // 설비/상호명
@@ -275,14 +279,18 @@ class ResultActivity : AppCompatActivity() {
         // 전체 합산 수치 출력
         for (i in 1..3) {
             val textView = TextView(this)
-            textView.gravity = Gravity.RIGHT
+            textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
             textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
             textView.setTypeface(null, Typeface.BOLD)
 
-            val glparams = GridLayout.LayoutParams()
-            glparams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+            val glparams = GridLayout.LayoutParams().apply {
+                width = 0
+                height = GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                setGravity(Gravity.FILL)
+            }
 
             when(i) {
                 // 빈 공백, 표 가로 3칸 차지
