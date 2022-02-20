@@ -45,7 +45,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill"
-                android:text="설비/상호"
+                android:text="상호/설비"
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:background="@color/white"
@@ -119,7 +119,7 @@
             android:id="@+id/tv_table_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="크기 : "
+            android:text="표 크기 : "
             android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"/>
