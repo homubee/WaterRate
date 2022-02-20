@@ -12,9 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_main_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WaterRate">
-        <activity
-            android:name=".view.AppInfoActivity"
-            android:parentActivityName=".view.MainActivity"></activity>
+        <activity android:name=".view.HelpActivity"
+            android:parentActivityName=".view.MainActivity" />
+        <activity android:name=".view.AppInfoActivity"
+            android:parentActivityName=".view.MainActivity" />
         <activity android:name=".view.ResultActivity" />
         <activity android:name=".view.InitializePrivateActivity" />
         <activity android:name=".view.CalculateActivity" />

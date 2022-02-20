@@ -57,18 +57,24 @@ class MainActivity : AppCompatActivity() {
 
     // 메뉴 버튼 추가 및 액티비티 전환
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuAppInfo: MenuItem? = menu?.add(0, 0, 0, "앱 정보")
-        val menuLicense: MenuItem? = menu?.add(0, 1, 0, "오픈소스 라이선스")
+        val menuHelp: MenuItem? = menu?.add(0, 0, 0, "도움말")
+        val menuAppInfo: MenuItem? = menu?.add(0, 1, 0, "앱 정보")
+        val menuLicense: MenuItem? = menu?.add(0, 2, 0, "오픈소스 라이선스")
         return super.onCreateOptionsMenu(menu)
     }
     // 금월지침은 숫자만 입력 받고, 해당 내용은 인텐트로 넘겨줌, 기존 액티비티는 종료
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
-            val intent = Intent(applicationContext, AppInfoActivity::class.java)
+            val intent = Intent(applicationContext, HelpActivity::class.java)
             startActivity(intent)
             true
         }
         1 -> {
+            val intent = Intent(applicationContext, AppInfoActivity::class.java)
+            startActivity(intent)
+            true
+        }
+        2 -> {
             val intent = Intent(applicationContext, OssLicensesMenuActivity::class.java)
             startActivity(intent)
             OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스")
