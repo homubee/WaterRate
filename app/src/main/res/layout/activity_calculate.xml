@@ -39,7 +39,7 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill"
-                android:text="설비/상호"
+                android:text="상호/설비"
                 android:background="@color/white"
                 android:padding="5dp"
                 android:layout_marginTop="1dp"

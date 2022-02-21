@@ -2,6 +2,8 @@ package com.homubee.waterrate.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.homubee.waterrate.BuildConfig
 import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityAppInfoBinding
