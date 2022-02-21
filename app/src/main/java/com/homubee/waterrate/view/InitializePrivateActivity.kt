@@ -14,9 +14,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.isVisible
-import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityInitializePrivateBinding
 import com.homubee.waterrate.databinding.DialogWaterInputBinding
 import com.homubee.waterrate.model.WaterRate
@@ -74,6 +75,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                 // 텍스트뷰 동적으로 추가
                 val textView = TextView(applicationContext)
                 textView.text = "공용 수도 선택"
+                textView.setTextAppearance(R.style.Theme_WaterRate)
                 firstView.addView(textView)
                 val llparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 llparams.leftMargin = Math.round(10*resources.displayMetrics.density)
@@ -85,7 +87,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                 // 체크 박스 동적으로 추가
                 val checkBoxList = mutableListOf<CheckBox>()
                 for (i in publicDataList.indices) {
-                    checkBoxList.add(CheckBox(applicationContext))
+                    checkBoxList.add(CheckBox(ContextThemeWrapper(applicationContext, R.style.Theme_WaterRate)))
                     val llparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     llparams.leftMargin = Math.round(10*resources.displayMetrics.density)
                     checkBoxList[i].layoutParams = llparams
