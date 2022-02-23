@@ -30,7 +30,13 @@ import com.homubee.waterrate.model.WaterRate
 import com.homubee.waterrate.util.DBHelper
 import java.io.FileOutputStream
 
-
+/**
+ * 계산 결과 액티비티 클래스
+ *
+ * 계산 결과 확인 가능, 몇가지 설정 후에 액티비티를 그대로 pdf로 출력할 수 있음
+ *
+ * 메뉴바를 통해 이미지 추가, pdf 출력, 지침 갱신 기능 제공
+ */
 class ResultActivity : AppCompatActivity() {
     lateinit var binding: ActivityResultBinding
     lateinit var totalWaterRateList: MutableList<WaterRate>
@@ -75,28 +81,29 @@ class ResultActivity : AppCompatActivity() {
         Log.d("URI", uri.toString())
 
         val document = PdfDocument()
-
         val content = binding.llMain
-        Log.d("width", binding.root.width.toString())
-        Log.d("height", binding.root.height.toString())
-
         val page = document.startPage(PdfDocument.PageInfo.Builder(content.width, content.height, 1).create())
 
         content.draw(page.canvas)
         document.finishPage(page)
 
         if (uri != null) {
+            // 파일 생성된 uri에 내용 작성
             val fileDescriptor = contentResolver.openFileDescriptor(uri, "w")
             document.writeTo(FileOutputStream(fileDescriptor?.fileDescriptor))
         } else {
+            // 저장하지 않고 뒤로 나가면 파일이 생성되지 않으므로 uri 없음, 관련 메시지 출력
             Toast.makeText(this, "파일 저장 실패", Toast.LENGTH_SHORT).show()
         }
 
         document.close()
     }
 
-    // calculate inSampleSize function
-    // code from https://developer.android.com/topic/performance/graphics/load-bitmap?hl=ko
+    /**
+     * Calculate inSampleSize function
+     *
+     * @author https://developer.android.com/topic/performance/graphics/load-bitmap?hl=ko
+     */
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         // Raw height and width of image
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
@@ -117,13 +124,28 @@ class ResultActivity : AppCompatActivity() {
         return inSampleSize
     }
 
-    // round function
-    // Works as same as Excel
+    /**
+     * Round function
+     *
+     * Round off input number on input digits.
+     * Works as same as Excel.
+     *
+     * @param number 숫자
+     * @param digits 자리수
+     * @return 반올림 결과
+     */
     private fun roundDigit(number : Double, digits : Int): Double {
         return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
     }
 
-    // comma on number function
+    /**
+     * Comma on number function
+     *
+     * Add comma on number (money)
+     *
+     * @param number 숫자
+     * @return 콤마 포함 숫자
+     */
     private fun putComma(number: Int): String {
         var ret = StringBuilder(number.toString())
         var count = 0
@@ -157,9 +179,14 @@ class ResultActivity : AppCompatActivity() {
         val rateList = mutableListOf<Int>()
         val diffRateList = mutableListOf<Int>()
 
-        // 표 크기 공유 프리퍼런스 설정
+        // 표 크기 공유 프리퍼런스 설정 및 크기 변경
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
         binding.sbTableSize.progress = sharedPref.getInt("tableSize", 10)
+        for (textView in binding.glTable) {
+            if (textView is TextView) {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, binding.sbTableSize.progress.toFloat())
+            }
+        }
 
         // 상위 3개 리스트 초기화
         for (i in totalWaterRateList.indices) {
@@ -220,11 +247,12 @@ class ResultActivity : AppCompatActivity() {
         // 표 내용 생성
         for (i in totalWaterRateList.indices) {
             for (j in 1..5) {
+                // 뷰 및 레이아웃 설정
                 val textView = TextView(this)
                 textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
                 textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
                 textView.setBackgroundColor(Color.WHITE)
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, binding.sbTableSize.progress.toFloat())
 
                 val glparams = GridLayout.LayoutParams().apply {
                     width = 0
@@ -233,6 +261,7 @@ class ResultActivity : AppCompatActivity() {
                     setGravity(Gravity.FILL)
                 }
 
+                // 표 내용 및 좌우 마진 설정
                 when(j) {
                     // 설비/상호명
                     1 -> {
@@ -273,6 +302,7 @@ class ResultActivity : AppCompatActivity() {
                     textView.text = ""
                 }
 
+                // 상하 마진 설정
                 glparams.topMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                 glparams.bottomMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
 
@@ -283,11 +313,12 @@ class ResultActivity : AppCompatActivity() {
 
         // 전체 합산 수치 출력
         for (i in 1..3) {
+            // 뷰 및 레이아웃 설정
             val textView = TextView(this)
             textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
             textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
             textView.setBackgroundColor(Color.WHITE)
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9f)
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, binding.sbTableSize.progress.toFloat())
             textView.setTypeface(null, Typeface.BOLD)
 
             val glparams = GridLayout.LayoutParams().apply {
@@ -297,6 +328,7 @@ class ResultActivity : AppCompatActivity() {
                 setGravity(Gravity.FILL)
             }
 
+            // 표 내용 및 좌우 마진 설정
             when(i) {
                 // 빈 공백, 표 가로 3칸 차지
                 1 -> {
@@ -337,6 +369,7 @@ class ResultActivity : AppCompatActivity() {
                 binding.tvTableSize.apply {
                     text = "표 크기 : " + (binding.sbTableSize.progress).toString()
                 }
+                // grid layout 내부 뷰를 순회하며 textView 체크하고 크기 변경
                 for (textView in binding.glTable) {
                     if (textView is TextView) {
                         Log.d("Progress", (seekBar!!.progress).toString())
@@ -372,9 +405,10 @@ class ResultActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    // 메뉴별 결과
+    // 메뉴별 기능
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.gallery -> {
+            // 갤러리에서 이미지 선택
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
             galleryResultLauncher.launch(intent)
@@ -386,6 +420,7 @@ class ResultActivity : AppCompatActivity() {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "application/pdf"
                     putExtra(Intent.EXTRA_TITLE, "수도 요금 정산 내역")
+                    // Documents 디렉토리에 저장하도록 설정, 없으면 Download 디렉토리가 디폴트
                     putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/")
                 }
                 pdfResultLauncher.launch(intent)
@@ -396,6 +431,7 @@ class ResultActivity : AppCompatActivity() {
             }
         }
         R.id.save -> {
+            // DB 갱신
             val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
             for (i in totalWaterRateList.indices) {
                 db.execSQL("update water_rate set count = " + thisMonthCountList[i] + " where name = '" + totalWaterRateList[i].name + "';")
