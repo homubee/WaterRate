@@ -250,14 +250,19 @@ class ResultActivity : AppCompatActivity() {
                 // 뷰 및 레이아웃 설정
                 val textView = TextView(this)
                 textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
-                textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
+                textView.setPadding(Math.round(1*resources.displayMetrics.density))
                 textView.setBackgroundColor(Color.WHITE)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, binding.sbTableSize.progress.toFloat())
 
                 val glparams = GridLayout.LayoutParams().apply {
                     width = 0
                     height = GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    columnSpec = if (j == 1) {
+                        GridLayout.spec(GridLayout.UNDEFINED, 1.3f)
+                    } else {
+                        GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    }
+
                     setGravity(Gravity.FILL)
                 }
 
@@ -272,6 +277,7 @@ class ResultActivity : AppCompatActivity() {
                     }
                     // 전월지침
                     2 -> {
+                        // 문자열 끝에 공백 문자를 하나 추가하여 가독성 개선 (이하 동일)
                         textView.text = totalWaterRateList[i].lastMonthCount.toString() + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
@@ -290,7 +296,7 @@ class ResultActivity : AppCompatActivity() {
                     }
                     // 요금
                     5 -> {
-                        textView.text = putComma(rateList[i])
+                        textView.text = putComma(rateList[i]) + " "
                         glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                         glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                     }
@@ -316,7 +322,7 @@ class ResultActivity : AppCompatActivity() {
             // 뷰 및 레이아웃 설정
             val textView = TextView(this)
             textView.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
-            textView.setPadding(Math.round(0.1*resources.displayMetrics.density).toInt())
+            textView.setPadding(Math.round(1*resources.displayMetrics.density))
             textView.setBackgroundColor(Color.WHITE)
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, binding.sbTableSize.progress.toFloat())
             textView.setTypeface(null, Typeface.BOLD)
@@ -324,7 +330,11 @@ class ResultActivity : AppCompatActivity() {
             val glparams = GridLayout.LayoutParams().apply {
                 width = 0
                 height = GridLayout.LayoutParams.WRAP_CONTENT
-                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                columnSpec = if (i == 1) {
+                    GridLayout.spec(GridLayout.UNDEFINED, 1.3f)
+                } else {
+                    GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                }
                 setGravity(Gravity.FILL)
             }
 
@@ -345,7 +355,7 @@ class ResultActivity : AppCompatActivity() {
                 }
                 // 전체 요금
                 3 -> {
-                    textView.text = putComma(totalRate)
+                    textView.text = putComma(totalRate) + " "
                     glparams.leftMargin = Math.round(0.5*resources.displayMetrics.density).toInt()
                     glparams.rightMargin = Math.round(1*resources.displayMetrics.density)
                 }
