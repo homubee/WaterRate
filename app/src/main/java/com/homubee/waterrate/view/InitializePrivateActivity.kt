@@ -23,7 +23,15 @@ import com.homubee.waterrate.databinding.DialogWaterInputBinding
 import com.homubee.waterrate.model.WaterRate
 import com.homubee.waterrate.util.DBHelper
 
+/**
+ * 개인 수도 초기화 액티비티 클래스
+ *
+ * 개인 수도 내용을 입력 받고, 리사이클러뷰로 출력
+ *
+ * 설비 이름과 전월지침(계량기 있는 경우만), 계량기 유무, 이용하는 공용 수도를 다이얼로그로 입력 받음
+ */
 class InitializePrivateActivity : AppCompatActivity() {
+    // 체크박스 id는 100~199까지 부여 (앱 구조 상 일반적인 경우 중복될 일은 없다고 보고 별도 예외 처리는 하지 않음)
     companion object {
         const val CHECKBOX_ID = 100
     }
@@ -72,11 +80,14 @@ class InitializePrivateActivity : AppCompatActivity() {
 
                 // 계량기 유무 뷰그룹 활성화
                 dialogBinding.llCounter.visibility = View.VISIBLE
-                // 텍스트뷰 동적으로 추가
+
+                // 뷰 및 레이아웃 설정
+                // 텍스트뷰 동적으로 추가 (동적으로 추가한 뷰는 디폴트 테마가 적용되므로 별도 설정 필요)
                 val textView = TextView(applicationContext)
                 textView.text = "공용 수도 선택"
                 textView.setTextAppearance(R.style.Theme_WaterRate)
                 firstView.addView(textView)
+
                 val llparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 llparams.leftMargin = Math.round(10*resources.displayMetrics.density)
                 llparams.rightMargin = Math.round(10*resources.displayMetrics.density)
@@ -112,6 +123,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                         }
                     }
 
+                    // 기본 타입은 1이지만 계량기 없는 쪽 라디오 버튼 체크된 경우는 2로 설정
                     var type = 1
                     if (dialogBinding.rgCounter.checkedRadioButtonId == dialogBinding.rdbtnNoCounter.id) {
                         type = 2
@@ -129,7 +141,9 @@ class InitializePrivateActivity : AppCompatActivity() {
                     } else if (dialogBinding.rgCounter.checkedRadioButtonId == -1) {
                         Toast.makeText(context, "계량기 유무를 체크해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
+                        // 타입 2의 경우 전월지침이 없으므로 -1로 설정
                         if (type == 2) count = "-1"
+
                         nameSet.add(name)
                         adapter.add(WaterRate(type, name, count.toDouble(), publicList))
                         if (binding.tvAddNotice.isVisible) binding.tvAddNotice.visibility = View.GONE
@@ -158,6 +172,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                 values.put("type", privateDataList[i].type)
                 values.put("name", privateDataList[i].name)
                 values.put("count", privateDataList[i].lastMonthCount)
+                // 콤마로 이름을 구분하여 배열 데이터를 긴 문자열로 대체함
                 for (j in privateDataList[i].waterRateList.indices) {
                     list += privateDataList[i].waterRateList[j] + if (j == privateDataList[i].waterRateList.size-1) {""} else {","}
                 }
@@ -170,6 +185,7 @@ class InitializePrivateActivity : AppCompatActivity() {
                 values.put("type", publicDataList[i].type)
                 values.put("name", publicDataList[i].name)
                 values.put("count", publicDataList[i].lastMonthCount)
+                // 콤마로 이름을 구분하여 배열 데이터를 긴 문자열로 대체함
                 for (j in publicDataList[i].waterRateList.indices) {
                     list += publicDataList[i].waterRateList[j] + if (j == publicDataList[i].waterRateList.size-1) {""} else {","}
                 }

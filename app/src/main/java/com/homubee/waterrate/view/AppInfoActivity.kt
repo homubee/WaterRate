@@ -2,12 +2,15 @@ package com.homubee.waterrate.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.homubee.waterrate.BuildConfig
 import com.homubee.waterrate.R
 import com.homubee.waterrate.databinding.ActivityAppInfoBinding
 
+/**
+ * 앱 정보 액티비티 클래스
+ *
+ * 간단한 앱 정보를 출력
+ */
 class AppInfoActivity : AppCompatActivity() {
     lateinit var binding: ActivityAppInfoBinding
 

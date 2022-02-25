@@ -21,7 +21,14 @@ import com.homubee.waterrate.databinding.ActivityCalculateBinding
 import com.homubee.waterrate.model.WaterRate
 import com.homubee.waterrate.util.DBHelper
 
+/**
+ * 수도 요금 계산 액티비티 클래스
+ *
+ * 금월지침과 총 사용량, 요금을 입력 받음
+ * (계량기 없는 경우에는 입력 받지 않음)
+ */
 class CalculateActivity : AppCompatActivity() {
+    // 체크박스 id는 200~299까지 부여 (앱 구조 상 일반적인 경우 중복될 일은 없다고 보고 별도 예외 처리는 하지 않음)
     companion object {
         const val EDITTEXT_ID = 200
     }
@@ -55,6 +62,7 @@ class CalculateActivity : AppCompatActivity() {
         // 표 내용 생성
         for (i in waterRateList.indices) {
             for (j in 1..3) {
+                // 뷰 및 레이아웃 설정
                 // 3번째의 경우 금월지침 입력 받아야 하므로 EditText 객체를 생성
                 val textView = if (j != 3) TextView(this) else EditText(this)
                 textView.gravity = Gravity.CENTER
@@ -68,6 +76,7 @@ class CalculateActivity : AppCompatActivity() {
                     setGravity(Gravity.FILL)
                 }
 
+                // 표 내용 및 좌우 마진 설정
                 when(j) {
                     // 설비/상호명
                     1 -> {
@@ -104,6 +113,8 @@ class CalculateActivity : AppCompatActivity() {
                     }
                     else -> ""
                 }
+
+                // 상하 마진 설정
                 glparams.topMargin = if (i == 0) {
                     Math.round(0.5*resources.displayMetrics.density).toInt()
                 } else {
@@ -131,6 +142,7 @@ class CalculateActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
             val thisMonthCountList = mutableListOf<Double>()
+            // 금월지침 입력 예외처리
             for  (i in waterRateList.indices) {
                 var thisMonthCount = findViewById<EditText>(EDITTEXT_ID + i).text.toString()
                 if (waterRateList[i].type != 2 && thisMonthCount.isBlank()) {
@@ -144,13 +156,16 @@ class CalculateActivity : AppCompatActivity() {
                     break
                 }
 
+                // 타입 2의 경우 금월지침이 없으므로 -1로 설정
                 if (waterRateList[i].type == 2) thisMonthCount = "-1"
                 thisMonthCountList.add(thisMonthCount.toDouble())
             }
 
+            // 전체 개수만큼 리스트에 추가되지 않으면 액티비티 전환이 이뤄지지 않음 (예외처리 후 리스트에 추가하므로)
             if (thisMonthCountList.size == waterRateList.size) {
                 val totalUsage = binding.etTotalUsage.text.toString()
                 val totalRate = binding.etTotalRate.text.toString()
+                // 총사용량, 총요금 입력 예외처리
                 if (totalUsage.isBlank() || totalRate.isBlank()) {
                     Toast.makeText(applicationContext, "내용을 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                 } else {

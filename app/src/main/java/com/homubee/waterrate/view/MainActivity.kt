@@ -12,6 +12,13 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.homubee.waterrate.databinding.ActivityMainBinding
 import com.homubee.waterrate.util.DBHelper
 
+/**
+ * 메인 액티비티 클래스
+ *
+ * 초기화, 계산 액티비티로 이동 가능
+ *
+ * 메뉴바에는 도움말, 앱정보, 오픈소스 라이브러리 기능 제공
+ */
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
@@ -20,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // DB 내용 empty 여부 확인 및 버튼 비활성화 설정
+        // DB 내용 empty 여부 확인 후 empty 일 경우 계산 버튼 비활성화
         val db: SQLiteDatabase = DBHelper(applicationContext).readableDatabase
         binding.btnCalculate.isEnabled = db.rawQuery("select * from water_rate", null).moveToNext()
 
@@ -31,8 +38,10 @@ class MainActivity : AppCompatActivity() {
                 setIcon(android.R.drawable.ic_dialog_alert)
                 setMessage("정말 초기화하시겠습니까?")
                 setPositiveButton("yes", DialogInterface.OnClickListener { p0, p1 ->
+                    // DB 초기화
                     val db: SQLiteDatabase = DBHelper(applicationContext).writableDatabase
                     db.execSQL("delete from water_rate")
+
                     val intent = Intent(applicationContext, InitializePublicActivity::class.java)
                     startActivity(intent)
                 })
@@ -47,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 다시 액티비티에 복귀했을 시 DB 내용 empty 여부 확인 및 버튼 비활성화 설정
+    // 다시 액티비티에 복귀했을 시 DB 내용 empty 여부 확인 후 empty 일 경우 계산 버튼 비활성화
     override fun onRestart() {
         super.onRestart()
         val db: SQLiteDatabase = DBHelper(applicationContext).readableDatabase
@@ -61,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         val menuLicense: MenuItem? = menu?.add(0, 2, 0, "오픈소스 라이선스")
         return super.onCreateOptionsMenu(menu)
     }
-    // 금월지침은 숫자만 입력 받고, 해당 내용은 인텐트로 넘겨줌, 기존 액티비티는 종료
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
             val intent = Intent(applicationContext, HelpActivity::class.java)
@@ -74,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
         2 -> {
+            // OssLicense 활용
             val intent = Intent(applicationContext, OssLicensesMenuActivity::class.java)
             startActivity(intent)
             OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스")

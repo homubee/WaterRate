@@ -15,6 +15,13 @@ import com.homubee.waterrate.databinding.ActivityInitializePublicBinding
 import com.homubee.waterrate.databinding.DialogWaterInputBinding
 import com.homubee.waterrate.model.WaterRate
 
+/**
+ * 공용 수도 초기화 액티비티 클래스
+ *
+ * 공용 수도 내용을 입력 받고, 리사이클러뷰로 출력
+ *
+ * 설비 이름과 전월지침만 다이얼로그로 입력 받음
+ */
 class InitializePublicActivity : AppCompatActivity() {
     lateinit var adapter: WaterRateAdapter
     lateinit var nameSet: MutableSet<String>
@@ -55,6 +62,7 @@ class InitializePublicActivity : AppCompatActivity() {
                     val count = dialogBinding.etCount.text.toString()
                     val privateList = mutableListOf<String>()
 
+                    // 입력 예외처리
                     if (name.isBlank() || count.isBlank()) {
                         Toast.makeText(context, "내용을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                     } else if (nameSet.contains(name)) {
