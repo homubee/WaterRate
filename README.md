@@ -1,0 +1,31 @@
+# WaterRate
+## Description
+- 공용/개인 수도 요금 계산 어플리케이션
+- 향후 플레이스토어 게시 예정
+
+## Stack
+<div align=center>
+  <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white">
+  <img src="https://img.shields.io/badge/sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
+  <img src="https://img.shields.io/badge/android studio-3DDC84?style=for-the-badge&logo=android studio&logoColor=black">
+  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+</div>
+
+## Environment
+- Minimum SDK Version: API 23
+- Target SDK Version: API 31
+- JVM 1.8
+
+## Functionality
+- 공용/개인 수도 저장 기능
+  - 이름, 전월지침을 입력 받아 저장
+  - 개인 수도 입력 시 각각에서 사용하는 공용 수도 선택 가능
+  - 개인 수도의 경우, 별도 계량기 없이 공용 수도만 사용하는 경우도 포함함
+- 수도 요금 계산 기능
+  - 금월지침, 총사용량, 총요금 입력 받아 요금 계산
+  - 공용 수도 요금은 개별로 균등하게 분배되며, 소숫점으로 인한 오차는 적절하게 조정하여 분배
+- 요금 계산 결과 출력 기능
+  - PDF 형식으로 요금 계산 결과를 출력해 파일로 저장 가능
+  - PDF에 이미지 추가 가능
+  - 표/글자 크기 조절 가능
