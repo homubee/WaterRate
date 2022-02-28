@@ -31,10 +31,11 @@
   - 표/글자 크기 조절 가능
 
 ## Screenshots
-<img src="https://user-images.githubusercontent.com/83688807/155986327-958e755d-9f5a-4a7d-a2b3-01700f3bbb32.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986344-bf5358c6-2390-4076-a432-8224ade2deac.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986419-8516c0bd-423f-4478-8c83-8fa4550b3a42.png" width="270" height="480"/>
+<img src="https://user-images.githubusercontent.com/83688807/155986327-958e755d-9f5a-4a7d-a2b3-01700f3bbb32.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986344-bf5358c6-2390-4076-a432-8224ade2deac.png" width="270" height="480"/>
 
+<img src="https://user-images.githubusercontent.com/83688807/155986419-8516c0bd-423f-4478-8c83-8fa4550b3a42.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986428-95c56016-0d6e-4048-afda-d907ae96dd0c.png" width="270" height="480"/>
 
-<img src="https://user-images.githubusercontent.com/83688807/155986428-95c56016-0d6e-4048-afda-d907ae96dd0c.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986429-29b18f15-c931-4ffe-8569-580f302dabda.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986430-b622e63a-61ff-403a-ade6-e5ecc30cf395.png" width="270" height="480"/>
+<img src="https://user-images.githubusercontent.com/83688807/155986429-29b18f15-c931-4ffe-8569-580f302dabda.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986430-b622e63a-61ff-403a-ade6-e5ecc30cf395.png" width="270" height="480"/>
 
 <img src="https://user-images.githubusercontent.com/83688807/155986433-7f3dd1aa-3a33-4ac5-a688-aa74266cf87e.png" width="270" height="480"/> <img src="https://user-images.githubusercontent.com/83688807/155986435-a4d7e5a2-d161-4a87-93c9-3044a8d46544.png" width="270" height="480"/>
 
