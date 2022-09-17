@@ -20,7 +20,8 @@
         <activity android:name=".view.InitializePrivateActivity" />
         <activity android:name=".view.CalculateActivity" />
         <activity android:name=".view.InitializePublicActivity" />
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.MainActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
