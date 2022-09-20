@@ -1,7 +1,13 @@
 # WaterRate
 ## Description
 - 공용/개인 수도 요금 계산 어플리케이션
-- 향후 플레이스토어 게시 예정
+- 여러 가구가 별도 계량기 없이 수도를 공유할 때 발생하는 번거로운 요금 계산을 처리해줍니다.
+- 공용/개인 수도 정보 저장 기능, 수도 요금 계산 기능, 요금 계산 결과 출력 기능(PDF 형태) 등을 제공합니다.
+
+## Download
+> https://play.google.com/store/apps/details?id=com.homubee.waterrate
+>
+> ※ 안드로이드 버전 및 기종에 따라 일부 기능이 제한될 수 있습니다.
 
 ## Stack
 <div align=center>
