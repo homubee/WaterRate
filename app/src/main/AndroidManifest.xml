@@ -21,7 +21,7 @@
         <activity android:name=".view.CalculateActivity" />
         <activity android:name=".view.InitializePublicActivity" />
         <activity android:name=".view.MainActivity"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
